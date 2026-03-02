@@ -1,0 +1,636 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Business Intelligence — Guía Simple</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@700;900&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --ink: #0d0d0d;
+    --paper: #f5f0e8;
+    --cream: #ede8db;
+    --gold: #c8960c;
+    --rust: #b84a2e;
+    --teal: #1a6b6b;
+    --light-teal: #e8f4f4;
+  }
+
+  body {
+    background: var(--paper);
+    color: var(--ink);
+    font-family: 'DM Sans', sans-serif;
+    font-weight: 300;
+    line-height: 1.7;
+    overflow-x: hidden;
+  }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    padding: 80px 60px 60px;
+    position: relative;
+    border-bottom: 3px solid var(--ink);
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -100px; right: -100px;
+    width: 500px; height: 500px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(200,150,12,0.15), transparent 70%);
+    pointer-events: none;
+  }
+
+  .hero-tag {
+    font-size: 11px;
+    letter-spacing: 4px;
+    text-transform: uppercase;
+    color: var(--rust);
+    font-weight: 500;
+    margin-bottom: 24px;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(52px, 9vw, 120px);
+    line-height: 0.95;
+    font-weight: 900;
+    margin-bottom: 32px;
+    animation: fadeUp 0.7s 0.1s ease both;
+  }
+
+  .hero h1 span { color: var(--gold); }
+
+  .hero-desc {
+    max-width: 540px;
+    font-size: 18px;
+    color: #444;
+    animation: fadeUp 0.7s 0.2s ease both;
+  }
+
+  .hero-scroll {
+    position: absolute;
+    bottom: 40px; left: 60px;
+    font-size: 12px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: #999;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  .hero-scroll::before {
+    content: '';
+    width: 40px; height: 1px;
+    background: #999;
+  }
+
+  /* SECTIONS */
+  .section {
+    padding: 80px 60px;
+    border-bottom: 1px solid #d0c9b8;
+    animation: fadeUp 0.6s ease both;
+  }
+
+  .section-number {
+    font-family: 'Playfair Display', serif;
+    font-size: 80px;
+    color: var(--cream);
+    font-weight: 900;
+    line-height: 1;
+    margin-bottom: -20px;
+  }
+
+  .section h2 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(28px, 4vw, 48px);
+    font-weight: 700;
+    margin-bottom: 24px;
+    position: relative;
+  }
+
+  .section h2 .line {
+    display: inline-block;
+    width: 60px; height: 4px;
+    background: var(--gold);
+    vertical-align: middle;
+    margin-right: 16px;
+  }
+
+  .section p {
+    font-size: 17px;
+    color: #333;
+    max-width: 680px;
+    margin-bottom: 20px;
+  }
+
+  /* ANALOGY BOX */
+  .analogy {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 4px;
+    padding: 40px;
+    margin: 32px 0;
+    position: relative;
+    overflow: hidden;
+  }
+  .analogy::before {
+    content: '"';
+    position: absolute;
+    top: -20px; left: 20px;
+    font-family: 'Playfair Display', serif;
+    font-size: 150px;
+    color: rgba(200,150,12,0.2);
+    line-height: 1;
+  }
+  .analogy p {
+    color: #e8e0d0;
+    font-size: 19px;
+    font-style: italic;
+    max-width: 600px;
+    position: relative;
+  }
+  .analogy strong { color: var(--gold); font-style: normal; }
+
+  /* USE CASES GRID */
+  .uses-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+    gap: 2px;
+    margin-top: 40px;
+    border: 2px solid var(--ink);
+  }
+
+  .use-card {
+    padding: 36px 28px;
+    background: var(--cream);
+    border: 1px solid #d0c9b8;
+    transition: background 0.3s, transform 0.2s;
+    cursor: default;
+  }
+  .use-card:hover {
+    background: var(--ink);
+    color: var(--paper);
+    transform: scale(1.02);
+    z-index: 2;
+  }
+  .use-card:hover .use-icon { filter: grayscale(0) brightness(1.5); }
+  .use-card:hover .use-title { color: var(--gold); }
+  .use-card:hover .use-desc { color: #ccc; }
+
+  .use-icon { font-size: 32px; margin-bottom: 16px; display: block; }
+  .use-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 20px;
+    font-weight: 700;
+    margin-bottom: 10px;
+    transition: color 0.3s;
+  }
+  .use-desc { font-size: 15px; color: #555; transition: color 0.3s; }
+
+  /* HOW IT WORKS FLOW */
+  .flow {
+    display: flex;
+    flex-direction: column;
+    gap: 0;
+    margin-top: 40px;
+    max-width: 700px;
+  }
+  .flow-step {
+    display: flex;
+    gap: 24px;
+    align-items: flex-start;
+    padding: 28px 0;
+    border-bottom: 1px dashed #ccc;
+    position: relative;
+  }
+  .flow-step:last-child { border-bottom: none; }
+  .step-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 48px;
+    font-weight: 900;
+    color: var(--gold);
+    line-height: 1;
+    min-width: 64px;
+  }
+  .step-content h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    margin-bottom: 8px;
+  }
+  .step-content p { font-size: 15px; color: #555; }
+
+  /* HIGHLIGHT STAT */
+  .stat-row {
+    display: flex;
+    gap: 2px;
+    margin: 40px 0;
+  }
+  .stat-box {
+    flex: 1;
+    padding: 36px 24px;
+    text-align: center;
+    border: 2px solid var(--ink);
+  }
+  .stat-box:nth-child(2) { background: var(--teal); color: white; }
+  .stat-big {
+    font-family: 'Playfair Display', serif;
+    font-size: 52px;
+    font-weight: 900;
+    color: var(--gold);
+    display: block;
+    line-height: 1;
+  }
+  .stat-box:nth-child(2) .stat-big { color: #aed9d9; }
+  .stat-label { font-size: 14px; opacity: 0.7; margin-top: 8px; }
+
+  /* FOOTER */
+  footer {
+    padding: 60px;
+    text-align: center;
+    background: var(--ink);
+    color: var(--paper);
+  }
+  footer h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 36px;
+    margin-bottom: 12px;
+  }
+  footer p { color: #999; font-size: 15px; }
+
+  @keyframes fadeUp {
+    from { opacity: 0; transform: translateY(30px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  @media (max-width: 600px) {
+    .hero, .section { padding: 60px 28px; }
+    .stat-row { flex-direction: column; }
+    footer { padding: 40px 28px; }
+    .hero-scroll { left: 28px; }
+  }
+</style>
+</head>
+<body>
+
+<!-- HERO -->
+<div class="hero">
+  <p class="hero-tag">Guía para todos — Sin tecnicismos</p>
+  <h1>Business<br><span>Intelligence</span></h1>
+  <p class="hero-desc">La ciencia de convertir datos aburridos en decisiones de negocio inteligentes. Explicado de forma simple, para cualquier persona.</p>
+  <p class="hero-scroll">Sigue leyendo</p>
+</div>
+
+<!-- QUÉ ES -->
+<div class="section">
+  <div class="section-number">01</div>
+  <h2><span class="line"></span>¿Qué es exactamente?</h2>
+  <p>
+    <strong>Business Intelligence (BI)</strong> — o <em>Inteligencia de Negocios</em> en español — es el conjunto de herramientas, procesos y tecnologías que una empresa usa para <strong>recolectar, organizar y analizar sus datos</strong>, con el fin de tomar mejores decisiones.
+  </p>
+  <p>En palabras simples: en lugar de que un jefe decida "a intuición", el BI le muestra <strong>datos reales y visuales</strong> para decidir con certeza.</p>
+
+  <div class="analogy">
+    <p>Imagina que tienes una tienda. Al final del mes ves tus ventas en papelitos sueltos. Con <strong>Business Intelligence</strong>, en cambio, tienes un <strong>tablero visual</strong> que te dice: qué producto vendiste más, en qué hora del día, qué clientes compran más seguido, y qué zona de la ciudad te genera más ganancias. Todo en tiempo real.</p>
+  </div>
+</div>
+
+<!-- CÓMO FUNCIONA -->
+<div class="section">
+  <div class="section-number">02</div>
+  <h2><span class="line"></span>¿Cómo funciona paso a paso?</h2>
+  <p>El proceso del BI sigue una lógica simple, como cocinar una receta:</p>
+
+  <div class="flow">
+    <div class="flow-step">
+      <span class="step-num">1</span>
+      <div class="step-content">
+        <h3>Recolectar datos</h3>
+        <p>Se recogen datos de todas partes: ventas, redes sociales, inventario, páginas web, encuestas. Es como juntar todos los ingredientes antes de cocinar.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <span class="step-num">2</span>
+      <div class="step-content">
+        <h3>Limpiar y organizar</h3>
+        <p>Los datos suelen llegar desordenados o con errores. Esta etapa los limpia y organiza para que tengan sentido.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <span class="step-num">3</span>
+      <div class="step-content">
+        <h3>Analizar</h3>
+        <p>Se buscan patrones, tendencias y relaciones entre los datos. ¿Cuándo vendo más? ¿Qué producto rota menos? ¿Qué clientes se van?</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <span class="step-num">4</span>
+      <div class="step-content">
+        <h3>Visualizar</h3>
+        <p>Los resultados se presentan en gráficas, dashboards y tablas fáciles de entender — incluso para quien no sabe de números.</p>
+      </div>
+    </div>
+    <div class="flow-step">
+      <span class="step-num">5</span>
+      <div class="step-content">
+        <h3>Decidir</h3>
+        <p>Con toda esa información clara, los directivos y equipos toman decisiones basadas en hechos, no en corazonadas.</p>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- USOS EN NEGOCIOS -->
+<div class="section">
+  <div class="section-number">03</div>
+  <h2><span class="line"></span>Usos reales en negocios</h2>
+  <p>El BI se usa en prácticamente cualquier industria. Aquí algunos ejemplos del mundo real:</p>
+
+  <div class="uses-grid">
+    <div class="use-card">
+      <span class="use-icon">🛒</span>
+      <div class="use-title">Retail y Ventas</div>
+      <p class="use-desc">Saber qué productos se venden más en cada temporada y ajustar el inventario antes de que se acaben o sobren.</p>
+    </div>
+    <div class="use-card">
+      <span class="use-icon">🏦</span>
+      <div class="use-title">Finanzas y Bancos</div>
+      <p class="use-desc">Detectar fraudes en tiempo real, analizar el riesgo de un préstamo y ver el comportamiento financiero de clientes.</p>
+    </div>
+    <div class="use-card">
+      <span class="use-icon">🏥</span>
+      <div class="use-title">Salud y Hospitales</div>
+      <p class="use-desc">Optimizar la asignación de camas, anticipar epidemias y monitorear la eficiencia de los tratamientos médicos.</p>
+    </div>
+    <div class="use-card">
+      <span class="use-icon">📦</span>
+      <div class="use-title">Logística y Supply Chain</div>
+      <p class="use-desc">Rastrear envíos, reducir tiempos de entrega y detectar cuellos de botella en la cadena de distribución.</p>
+    </div>
+    <div class="use-card">
+      <span class="use-icon">📣</span>
+      <div class="use-title">Marketing Digital</div>
+      <p class="use-desc">Ver qué campaña genera más ventas, en qué canal rinde mejor el dinero, y qué tipo de cliente convierte más.</p>
+    </div>
+    <div class="use-card">
+      <span class="use-icon">🏭</span>
+      <div class="use-title">Manufactura</div>
+      <p class="use-desc">Monitorear máquinas en tiempo real, predecir fallas antes de que ocurran y reducir desperdicios en producción.</p>
+    </div>
+  </div>
+</div>
+
+<!-- IMPACTO -->
+<div class="section">
+  <div class="section-number">04</div>
+  <h2><span class="line"></span>¿Por qué importa tanto?</h2>
+  <p>Las empresas que usan BI toman decisiones más rápido, gastan mejor su dinero y entienden a sus clientes de forma mucho más profunda.</p>
+
+  <div class="stat-row">
+    <div class="stat-box">
+      <span class="stat-big">5×</span>
+      <div class="stat-label">Más rápidas son las decisiones con BI vs. sin él</div>
+    </div>
+    <div class="stat-box">
+      <span class="stat-big">↑ 26%</span>
+      <div class="stat-label">Mejora promedio en rentabilidad para empresas que adoptan BI</div>
+    </div>
+    <div class="stat-box">
+      <span class="stat-big">90%</span>
+      <div class="stat-label">De grandes empresas globales ya usa alguna herramienta de BI</div>
+    </div>
+  </div>
+
+  <p>La diferencia entre una empresa que usa BI y una que no, es como la diferencia entre manejar con GPS y manejar sin mapa. Ambas llegan… pero una llega más rápido y con menos pérdidas.</p>
+</div>
+
+<!-- HERRAMIENTAS -->
+<div class="section">
+  <div class="section-number">05</div>
+  <h2><span class="line"></span>Herramientas populares de BI</h2>
+  <p>No necesitas ser programador para usar BI. Existen herramientas visuales muy accesibles:</p>
+
+  <div class="flow" style="max-width:100%; flex-direction: row; flex-wrap: wrap; gap: 16px; border:none;">
+    <div style="border:2px solid var(--ink); padding:20px 28px; min-width:180px;">
+      <strong style="font-family:'Playfair Display',serif;font-size:18px;">Power BI</strong><br>
+      <span style="font-size:13px;color:#666;">Microsoft — muy usada en empresas</span>
+    </div>
+    <div style="border:2px solid var(--ink); padding:20px 28px; min-width:180px; background:var(--ink);color:var(--paper)">
+      <strong style="font-family:'Playfair Display',serif;font-size:18px; color:var(--gold)">Tableau</strong><br>
+      <span style="font-size:13px;color:#aaa;">Visualizaciones poderosas</span>
+    </div>
+    <div style="border:2px solid var(--ink); padding:20px 28px; min-width:180px;">
+      <strong style="font-family:'Playfair Display',serif;font-size:18px;">Looker</strong><br>
+      <span style="font-size:13px;color:#666;">Google — ideal para negocios digitales</span>
+    </div>
+    <div style="border:2px solid var(--ink); padding:20px 28px; min-width:180px;">
+      <strong style="font-family:'Playfair Display',serif;font-size:18px;">Google Data Studio</strong><br>
+      <span style="font-size:13px;color:#666;">Gratuita y sencilla de usar</span>
+    </div>
+  </div>
+</div>
+
+<!-- TÉRMINOS CLAVE -->
+<div class="section">
+  <div class="section-number">06</div>
+  <h2><span class="line"></span>Términos que debes conocer antes de empezar a programar</h2>
+  <p>Si vas a desarrollar una solución de BI, estos son los conceptos que vas a escuchar constantemente. Mejor que los conozcas desde el primer día.</p>
+
+  <div class="terms-grid">
+
+    <div class="term-card">
+      <div class="term-badge">Base de datos</div>
+      <h3 class="term-title">Base de Datos (DB)</h3>
+      <p class="term-def">Es donde se guardan todos los datos de forma organizada. Piensa en ella como un Excel gigante y estructurado. Las más comunes en BI son <strong>SQL Server, PostgreSQL y MySQL</strong>.</p>
+      <div class="term-example">💡 Ejemplo: Una tabla de "ventas" con columnas de fecha, producto, cantidad y precio.</div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-badge">Lenguaje</div>
+      <h3 class="term-title">SQL</h3>
+      <p class="term-def">El lenguaje para hablar con bases de datos. Con SQL puedes pedir, filtrar, agrupar y calcular datos. Es <strong>imprescindible</strong> en cualquier proyecto de BI.</p>
+      <div class="term-example">💡 Ejemplo: <code>SELECT producto, SUM(ventas) FROM tabla GROUP BY producto</code></div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-badge">Arquitectura</div>
+      <h3 class="term-title">ETL</h3>
+      <p class="term-def"><strong>Extract, Transform, Load.</strong> El proceso de sacar datos de una fuente, transformarlos (limpiarlos, calcularlos) y cargarlos en otro lugar. Es el corazón de cualquier pipeline de BI.</p>
+      <div class="term-example">💡 Ejemplo: Coger datos de ventas de una tienda online, limpiarlos y meterlos en un Data Warehouse.</div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-badge">Almacenamiento</div>
+      <h3 class="term-title">Data Warehouse</h3>
+      <p class="term-def">Una base de datos especial diseñada para análisis, no para operaciones del día a día. Guarda datos históricos de toda la empresa en un solo lugar. Herramientas populares: <strong>Snowflake, BigQuery, Redshift</strong>.</p>
+      <div class="term-example">💡 Diferencia clave: Una DB normal registra transacciones. Un DW analiza millones de ellas.</div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-badge">Visualización</div>
+      <h3 class="term-title">Dashboard</h3>
+      <p class="term-def">Un panel visual interactivo con gráficas, tablas y KPIs. Es el producto final que ve el usuario de negocio. Lo hacen herramientas como <strong>Power BI, Tableau o Looker</strong>.</p>
+      <div class="term-example">💡 El dashboard es como el cuadro de mandos de un coche: te muestra todo lo importante de un vistazo.</div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-badge">Métricas</div>
+      <h3 class="term-title">KPI</h3>
+      <p class="term-def"><strong>Key Performance Indicator.</strong> Un número clave que mide si el negocio va bien o mal. En BI tu trabajo es ayudar a calcularlos y mostrarlos.</p>
+      <div class="term-example">💡 Ejemplos: Tasa de conversión, ingresos mensuales, número de clientes nuevos.</div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-badge">Modelado</div>
+      <h3 class="term-title">Modelo de Datos</h3>
+      <p class="term-def">La forma en que las tablas se relacionan entre sí. El modelo más común en BI es el <strong>esquema en estrella</strong>: una tabla central (hechos) rodeada de tablas de contexto (dimensiones).</p>
+      <div class="term-example">💡 Ejemplo: Tabla de Ventas (hechos) + tablas de Fecha, Producto y Cliente (dimensiones).</div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-badge">Analítica</div>
+      <h3 class="term-title">Granularidad</h3>
+      <p class="term-def">El nivel de detalle de los datos. Datos con alta granularidad = muy detallados (por transacción). Baja granularidad = resumidos (por mes). Esto afecta directamente cómo diseñas tus tablas.</p>
+      <div class="term-example">💡 Alta: cada ticket de caja. Baja: ventas totales del mes. Tú decides qué necesita el negocio.</div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-badge">Datos</div>
+      <h3 class="term-title">Dato Crudo vs. Dato Procesado</h3>
+      <p class="term-def">El dato crudo es lo que llega sin tocar (puede tener errores, formatos raros, duplicados). El dato procesado ya fue limpiado y está listo para analizar. Tu ETL hace esa transformación.</p>
+      <div class="term-example">💡 Crudo: "01/13/24", "ene-24", "2024-01-13". Procesado: todo en formato estándar 2024-01-13.</div>
+    </div>
+
+    <div class="term-card">
+      <div class="term-badge">Conexión</div>
+      <h3 class="term-title">API</h3>
+      <p class="term-def">Una interfaz que permite a tu programa pedir datos a otro sistema. Muchas fuentes de datos en BI se conectan vía API (redes sociales, CRMs, e-commerce, etc.).</p>
+      <div class="term-example">💡 Es como un camarero: tú pides lo que necesitas, la API va a la cocina (servidor) y te trae los datos.</div>
+    </div>
+
+    <div class="term-card term-card--wide">
+      <div class="term-badge" style="background:var(--rust);">Ruta de aprendizaje</div>
+      <h3 class="term-title">¿Por dónde empezar?</h3>
+      <p class="term-def">Si tuviéramos que darte un orden de aprendizaje para BI desde cero, sería este:</p>
+      <div class="learning-path">
+        <div class="lp-step"><span class="lp-num">1</span><div><strong>SQL básico</strong> — SELECT, WHERE, GROUP BY, JOIN</div></div>
+        <div class="lp-step"><span class="lp-num">2</span><div><strong>Modelado de datos</strong> — Qué es un esquema en estrella</div></div>
+        <div class="lp-step"><span class="lp-num">3</span><div><strong>ETL básico</strong> — Transformar y limpiar datos (Python o Power Query)</div></div>
+        <div class="lp-step"><span class="lp-num">4</span><div><strong>Una herramienta de visualización</strong> — Power BI o Google Data Studio</div></div>
+        <div class="lp-step"><span class="lp-num">5</span><div><strong>Entender el negocio</strong> — Preguntar qué KPIs importan y por qué</div></div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+<style>
+  .terms-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: 2px;
+    margin-top: 40px;
+  }
+  .term-card {
+    background: var(--cream);
+    border: 1px solid #ccc4b0;
+    padding: 28px 24px;
+    transition: box-shadow 0.2s, transform 0.2s;
+  }
+  .term-card:hover {
+    box-shadow: 6px 6px 0 var(--ink);
+    transform: translate(-3px, -3px);
+    z-index: 2;
+    position: relative;
+  }
+  .term-card--wide {
+    grid-column: 1 / -1;
+    background: var(--ink);
+    color: var(--paper);
+  }
+  .term-card--wide .term-title { color: var(--gold); }
+  .term-card--wide .term-def { color: #ccc; max-width: 100%; }
+
+  .term-badge {
+    display: inline-block;
+    font-size: 10px;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    background: var(--teal);
+    color: white;
+    padding: 3px 10px;
+    border-radius: 2px;
+    margin-bottom: 12px;
+    font-weight: 500;
+  }
+  .term-title {
+    font-family: 'Playfair Display', serif;
+    font-size: 22px;
+    font-weight: 700;
+    margin-bottom: 10px;
+  }
+  .term-def {
+    font-size: 14.5px;
+    color: #444;
+    max-width: 400px;
+    margin-bottom: 14px;
+  }
+  .term-example {
+    font-size: 13px;
+    color: #666;
+    background: rgba(0,0,0,0.05);
+    border-left: 3px solid var(--gold);
+    padding: 8px 12px;
+    border-radius: 0 3px 3px 0;
+  }
+  .term-card--wide .term-example { display: none; }
+
+  code {
+    font-family: 'Courier New', monospace;
+    font-size: 12px;
+    background: rgba(0,0,0,0.08);
+    padding: 2px 6px;
+    border-radius: 3px;
+  }
+
+  .learning-path {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    margin-top: 20px;
+  }
+  .lp-step {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    color: #ddd;
+    font-size: 15px;
+  }
+  .lp-step strong { color: white; }
+  .lp-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 28px;
+    font-weight: 900;
+    color: var(--gold);
+    min-width: 36px;
+    line-height: 1;
+  }
+</style>
+
+<!-- FOOTER -->
+<footer>
+  <h3>Datos → Decisiones → Resultados</h3>
+  <p>Business Intelligence no es magia. Es la disciplina de escuchar lo que tus propios datos tienen para decirte.</p>
+</footer>
+
+</body>
+</html>
